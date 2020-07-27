@@ -5,11 +5,7 @@
 #ifndef SRC_INCLUDE_GUI_H_
 #define SRC_INCLUDE_GUI_H_
 
-#include <gtkmm-3.0/gtkmm/box.h>
-#include <gtkmm-3.0/gtkmm/enums.h>
-#include <gtkmm-3.0/gtkmm/scrolledwindow.h>
-#include <gtkmm-3.0/gtkmm/textview.h>
-#include <gtkmm-3.0/gtkmm/window.h>
+#include <gtkmm-3.0/gtkmm.h>
 
 #include "main.h"
 
@@ -23,6 +19,7 @@ class Window : public Gtk::Window {
   Gtk::ScrolledWindow scrolled_window;
   Gtk::TextView text_view;
   Glib::RefPtr<Gtk::TextBuffer> buffer;
+  bool on_key_press_event(GdkEventKey *event) override;
 };
 }  // namespace gui
 
