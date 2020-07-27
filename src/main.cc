@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   // App info
   AppInfo app_info;
   app_info.name = "PaperTE";
-  app_info.version = "0.0.1";
+  app_info.version = "0.1.0";
   app_info.default_width = 640;
   app_info.default_height = 480;
 
