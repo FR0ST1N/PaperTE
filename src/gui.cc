@@ -64,11 +64,23 @@ void Window::OpenFileChooser() {
   // handle the response on select
   if (result == Gtk::RESPONSE_OK) {
     std::cout << "Choose File" << std::endl;
-    std::string file_path = dialog.get_filename();
+    file_path = dialog.get_filename();
     buffer->set_text(file::Read(file_path));
     set_title(app_title + " - " + file_path);
     std::cout << "File selected: " << file_path << std::endl;
   }
+}
+
+void Window::SaveDialog(bool flag) {
+  Gtk::MessageDialog dialog(*this, "Save Info");
+  std::string text;
+  if (flag) {
+    text = "File saved successfully.";
+  } else {
+    text = "Cannot save.";
+  }
+  dialog.set_secondary_text(text);
+  dialog.run();
 }
 
 // key press event listener
@@ -82,6 +94,12 @@ bool Window::on_key_press_event(GdkEventKey* key_event) {
         return true;
       case GDK_KEY_s:  // save event
         std::cout << "Key Event: Save\n";
+        if (file_path != "") {
+          file::Write(file_path, buffer->get_text());
+          SaveDialog(true);
+        } else {
+          SaveDialog(false);  // called on empty buffer
+        }
         return true;
       case GDK_KEY_q:  // quit event
         std::cout << "Key Event: Quit\n";

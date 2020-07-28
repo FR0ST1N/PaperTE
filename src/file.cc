@@ -12,8 +12,13 @@ std::string Read(std::string file_path) {
   std::string content;
   content.assign((std::istreambuf_iterator<char>(ifs)),
                  (std::istreambuf_iterator<char>()));
+  ifs.close();  // close is optional here because auto called on out of scope
   return content;
 }
 
-void Write(std::string file_path, std::string content) {}
+void Write(std::string file_path, std::string content) {
+  std::ofstream ofs(file_path);
+  ofs << content;
+  ofs.close();
+}
 }  // namespace file
