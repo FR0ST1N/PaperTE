@@ -7,6 +7,8 @@
 
 #include <gtkmm-3.0/gtkmm.h>
 
+#include <string>
+
 #include "main.h"
 
 namespace gui {
@@ -15,10 +17,12 @@ class Window : public Gtk::Window {
   explicit Window(AppInfo *app_info);
   virtual ~Window();  // virtual guarantees base class destruction
  private:
+  std::string app_title;
   Gtk::Box box;
   Gtk::ScrolledWindow scrolled_window;
   Gtk::TextView text_view;
   Glib::RefPtr<Gtk::TextBuffer> buffer;
+  void OpenFileChooser();
   bool on_key_press_event(GdkEventKey *event) override;
 };
 }  // namespace gui
