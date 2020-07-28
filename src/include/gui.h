@@ -14,7 +14,7 @@
 namespace gui {
 class Window : public Gtk::Window {
  public:
-  explicit Window(AppInfo *app_info);
+  Window(AppInfo *app_info, std::string file_path);
   virtual ~Window();  // virtual guarantees base class destruction
  private:
   std::string app_title;
@@ -23,6 +23,7 @@ class Window : public Gtk::Window {
   Gtk::ScrolledWindow scrolled_window;
   Gtk::TextView text_view;
   Glib::RefPtr<Gtk::TextBuffer> buffer;
+  void SetBufferText();
   void OpenFileChooser();
   void SaveDialog(bool flag);
   bool on_key_press_event(GdkEventKey *event) override;

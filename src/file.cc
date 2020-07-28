@@ -12,7 +12,7 @@ std::string Read(std::string file_path) {
   std::string content;
   content.assign((std::istreambuf_iterator<char>(ifs)),
                  (std::istreambuf_iterator<char>()));
-  ifs.close();  // close is optional here because auto called on out of scope
+  ifs.close();
   return content;
 }
 

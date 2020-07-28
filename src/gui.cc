@@ -2,14 +2,14 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root for details.
 
-#include <iostream>
-
 #include "include/file.h"
 #include "include/gui.h"
 #include "include/main.h"
 
 namespace gui {
-Window::Window(AppInfo* app_info) : box(Gtk::ORIENTATION_VERTICAL) {
+Window::Window(AppInfo* app_info, std::string file_path)
+    : box(Gtk::ORIENTATION_VERTICAL) {
+  this->file_path = file_path;
   app_title = app_info->name + ' ' + app_info->version;
 
   // set app info
@@ -24,9 +24,13 @@ Window::Window(AppInfo* app_info) : box(Gtk::ORIENTATION_VERTICAL) {
   scrolled_window.add(text_view);
   box.pack_start(scrolled_window);
 
-  // init buffer and open file chooser
+  // init buffer and open file chooser or open file
   buffer = Gtk::TextBuffer::create();
-  OpenFileChooser();
+  if (this->file_path == "") {
+    OpenFileChooser();
+  } else {
+    SetBufferText();
+  }
   text_view.set_buffer(buffer);
 
   // add key press event
@@ -36,6 +40,11 @@ Window::Window(AppInfo* app_info) : box(Gtk::ORIENTATION_VERTICAL) {
 }
 
 Window::~Window() {}
+
+void Window::SetBufferText() {
+  buffer->set_text(file::Read(file_path));
+  set_title(app_title + " - " + file_path);
+}
 
 void Window::OpenFileChooser() {
   Gtk::FileChooserDialog dialog("Please choose a file",
@@ -63,11 +72,8 @@ void Window::OpenFileChooser() {
 
   // handle the response on select
   if (result == Gtk::RESPONSE_OK) {
-    std::cout << "Choose File" << std::endl;
     file_path = dialog.get_filename();
-    buffer->set_text(file::Read(file_path));
-    set_title(app_title + " - " + file_path);
-    std::cout << "File selected: " << file_path << std::endl;
+    SetBufferText();
   }
 }
 
@@ -89,11 +95,9 @@ bool Window::on_key_press_event(GdkEventKey* key_event) {
                            GDK_MOD1_MASK)) == GDK_CONTROL_MASK) {
     switch (key_event->keyval) {
       case GDK_KEY_o:  // open event
-        std::cout << "Key Event: Open\n";
         OpenFileChooser();
         return true;
       case GDK_KEY_s:  // save event
-        std::cout << "Key Event: Save\n";
         if (file_path != "") {
           file::Write(file_path, buffer->get_text());
           SaveDialog(true);
@@ -102,7 +106,7 @@ bool Window::on_key_press_event(GdkEventKey* key_event) {
         }
         return true;
       case GDK_KEY_q:  // quit event
-        std::cout << "Key Event: Quit\n";
+        hide();
         return true;
     }
   }
